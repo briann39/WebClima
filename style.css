@@ -4,16 +4,49 @@
     box-sizing: border-box;
 }
 
+.video-background {
+  position: relative;
+  width: 100%;
+  height: 100vh; /* Toda la pantalla */
+  overflow: hidden;
+}
+
+
+.video-background video {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  min-width: 100%;
+  min-height: 100%;
+  width: auto;
+  height: auto;
+  z-index: -1;
+  transform: translate(-50%, -50%);
+  object-fit: cover; /* Asegura que el video cubra toda el área */
+  object-position: center bottom; /* Centra el video */
+}
+
+.app {
+  position: absolute;
+  width: 100%;
+  height: 100vh;
+  bottom: 0;
+  left: 0;
+  z-index: 1;
+  color: white;
+  padding: 2rem;
+  box-sizing: border-box;
+}
+
 body {
-    background-color: #E6F2FF;
+    width: 100%;
 }
 
 h1 {
     font-size: 3rem;
     text-align: center;
-    color: #2c3e50;
+    color: black;
     font-family: sans-serif;
-    margin: 2rem;
 }
 
 i {
@@ -26,18 +59,26 @@ i {
     align-items: center;
     flex-direction: column;
     width: 100%;
-    gap: 2rem;
+    gap: 0.5rem;
+    padding: 1rem;
 }
+
+/* Search Container */
 
 .search-container {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 20px;
-    background-color: #1a5276;
-    padding: 0.5rem;
-    border-radius: 5px;
-    box-shadow: 0px 5px 15px #000000;
+    gap: 1.5rem;
+    background: rgba(255, 255, 255, 0.2); /* Fondo blanco semi-transparente */
+    backdrop-filter: blur(10px);          /* Desenfoque del fondo detrás */
+    -webkit-backdrop-filter: blur(10px);  /* Soporte para Safari */
+    border-radius: 5px;                   /* Bordes redondeados */
+    border: 1px solid rgba(255, 255, 255, 0.3); /* Borde sutil */
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);  /* Sombra suave */
+    color: white;                         /* Texto blanco para contraste */
+    padding: 1.5rem;
+    box-shadow: 0px 5px 15px #00000036;
 
 }
 .search-container h2 {
@@ -81,17 +122,35 @@ i {
   outline: 2px solid #FFD700;
   outline-offset: 2px;
 }
+
+.search-container button:focus {
+  outline: 2px solid #FFD700;
+  outline-offset: 2px;
+}
+
+
+
+/* Search Container */
+
+/* Weather Container */
 .weather-container {
     display: flex;
     flex-direction: column;
     align-items: center;
     margin-top: 20px;
+    width: 100%;
     gap: 20px;
-    background-color: #1a5276;
-    padding: 1rem;
-    width: 80%;
     border-radius: 5px;
-    box-shadow: 0px 5px 15px #000000;
+  background: rgba(255, 255, 255, 0.2); /* Fondo blanco semi-transparente */
+  backdrop-filter: blur(10px);          /* Desenfoque del fondo detrás */
+  -webkit-backdrop-filter: blur(10px);  /* Soporte para Safari */
+  border: 1px solid rgba(255, 255, 255, 0.3); /* Borde sutil */
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);  /* Sombra suave */
+  color: white;                         /* Texto blanco para contraste */
+    padding: 1rem;
+    border-radius: 5px;
+    box-shadow: 0px 5px 15px #00000077;
+    min-width: 300px;
 }
 
 .weather-container h2 {
@@ -120,4 +179,27 @@ i {
     display: flex;
     align-items: center;
     gap: 10px;
+}
+
+
+/* Responsive Design */
+@media (max-width: 720px) {
+
+    .search-container {
+        flex-direction: column;
+        width: 100%;
+    }
+    .search-container input {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+    .search-container button {
+        width: 100%;
+    }
+
+    .weather-container {
+        width: 100%;
+        margin: 0;
+    }
+
 }
