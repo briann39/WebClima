@@ -1,50 +1,65 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>AppWeb</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css" />
     <!-- Importar font-awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    />
     <!-- Importar Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-</head>
-<body>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+  </head>
+  <body>
     <section>
-        <div class="video-background">
-            <video id="video-background"   autoplay muted loop playsinline>
-                <source id="source-background" src="backgrounds/default.mp4" type="video/mp4" />
-                Tu navegador no soporta el video.
-            </video>
+      <div class="video-background">
+        <video id="video-background" autoplay muted loop playsinline>
+          <source
+            id="source-background"
+            src="backgrounds/default.mp4"
+            type="video/mp4"
+          />
+          Tu navegador no soporta el video.
+        </video>
+      </div>
+      <div class="app">
+        <div>
+          <h1 class="title-web">CLIMA</h1>
         </div>
-        <div class="app">
+        <div class="container">
+          <form onsubmit="" class="search-container">
+            <!-- Formulario de búsqueda de ciudad -->
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <h2>Buscar ciudad</h2>
+            <div class="input-container">
+              <input
+                type="text"
+                name=""
+                id="inputLocation"
+                placeholder="Digita tu ciudad"
+              />
+              <div id="city-suggestions"></div>
+            </div>
+            <button type="submit" id="btnSearch">Buscar</button>
+          </form>
+          <div class="weather-container">
+            <h2 id="location">-------</h2>
+            <h3 id="temperature" class="temperature">-- °C</h3>
+            <p id="temperatureRec">Min: - °C Max: - °C</p>
+            <p id="pronostic">Pronostico: -----</p>
+            <i id="weather-icon" class="fas fa-sun"></i>
             <div>
-                <h1 class="title-web">CLIMA</h1>
+              <p id="humidity">Humedad: --%</p>
+              <p id="wind">Viento: -- km/h</p>
             </div>
-            <div class="container">
-                <form onsubmit="" class="search-container">
-                    <!-- Formulario de búsqueda de ciudad -->
-                    <i class="fa-solid fa-magnifying-glass"></i>
-                    <h2>Buscar ciudad</h2>
-                    <input type="text" name="" id="inputLocation" placeholder="Digita tu ciudad">
-                    <button type="submit" id="btnSearch">Buscar</button>
-                </form>
-                <div class="weather-container">
-                        <h2 id="location">-------</h2>
-                        <h3 id="temperature" class="temperature">-- °C</h3>
-                        <p id="temperatureRec">Min: - °C Max: - °C </p>
-                        <p id="pronostic">Pronostico: -----</p>
-                        <i id="weather-icon" class="fas fa-sun"></i>
-                        <div>
-                            <p id="humidity">Humedad: --%</p>
-                            <p id="wind">Viento: -- km/h</p>
-                        </div>
-                </div>
-            </div>
+          </div>
         </div>
+      </div>
     </section>
 
     <script src="script.js"></script>
-</body>
+  </body>
 </html>

@@ -1,7 +1,7 @@
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 .video-background {
@@ -10,7 +10,6 @@
   height: 100vh; /* Toda la pantalla */
   overflow: hidden;
 }
-
 
 .video-background video {
   position: absolute;
@@ -39,167 +38,200 @@
 }
 
 body {
-    width: 100%;
+  width: 100%;
 }
 
 h1 {
-    font-size: 3rem;
-    text-align: center;
-    color: black;
-    font-family: sans-serif;
+  font-size: 3rem;
+  text-align: center;
+  color: black;
+  font-family: sans-serif;
 }
 
 i {
-    font-size: 1.5em;
-    color: #2980b9;
+  font-size: 1.5em;
+  color: #2980b9;
 }
 
 .container {
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-    width: 100%;
-    gap: 0.5rem;
-    padding: 1rem;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
+  gap: 0.5rem;
+  padding: 1rem;
 }
 
 /* Search Container */
 
 .search-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 1.5rem;
-    background: rgba(255, 255, 255, 0.2); /* Fondo blanco semi-transparente */
-    backdrop-filter: blur(10px);          /* Desenfoque del fondo detrás */
-    -webkit-backdrop-filter: blur(10px);  /* Soporte para Safari */
-    border-radius: 5px;                   /* Bordes redondeados */
-    border: 1px solid rgba(255, 255, 255, 0.3); /* Borde sutil */
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);  /* Sombra suave */
-    color: white;                         /* Texto blanco para contraste */
-    padding: 1.5rem;
-    box-shadow: 0px 5px 15px #00000036;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  background: rgba(255, 255, 255, 0.2); /* Fondo blanco semi-transparente */
+  backdrop-filter: blur(10px); /* Desenfoque del fondo detrás */
+  -webkit-backdrop-filter: blur(10px); /* Soporte para Safari */
+  border-radius: 5px; /* Bordes redondeados */
+  border: 1px solid rgba(255, 255, 255, 0.3); /* Borde sutil */
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1); /* Sombra suave */
+  color: white; /* Texto blanco para contraste */
+  padding: 1.5rem;
 
+  box-shadow: 0px 5px 15px #00000036;
 }
 .search-container h2 {
-    font-size: 1.5em;
-    color: white;
-    font-family: 'Rubik', sans-serif;}
+  font-size: 1.5em;
+  color: white;
+  font-family: "Rubik", sans-serif;
+}
 
 .search-container input {
-    padding: 10px;
-    border: 2px solid #2980b9;
-    border-radius: 5px;
-    font-size: 1em;
-    width: 300px;
-    background-color: #4DA6FF;
-    color: #2c3e50;
+  padding: 10px;
+  border: 2px solid #2980b9;
+  border-radius: 5px;
+  font-size: 1em;
+  width: 300px;
+  background-color: #4da6ff;
+  color: #2c3e50;
 }
 
 .search-container input::placeholder {
-    color: #2c3e50;
-    font-style: italic;
+  color: #2c3e50;
+  font-style: italic;
+}
+
+.input-container {
+  position: relative; /* Necesario para posicionar las sugerencias */
+  width: 300px; /* Asegura que el contenedor tenga el mismo ancho que el input */
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  align-items: flex-start; /* Alinea el input al inicio */
+  justify-content: center; /* Centra verticalmente el input */
+}
+
+#city-suggestions {
+  position: absolute;
+  background: #1a5276;
+  left: 0; /* Alinea las sugerencias con el input */
+  top: 100%; /* Coloca las sugerencias debajo del input */
+  border: 0px solid #ccc;
+  z-index: 1000;
+  width: 300px; /* Asegura que el ancho coincida con el input */
+  max-height: 150px; /* Altura máxima para el contenedor de sugerencias */
+  overflow-y: auto; /* Permite desplazamiento si hay muchas sugerencias */
+}
+
+.suggestion-item {
+  padding: 8px;
+  cursor: pointer;
+  color: #fff; /* Color del texto de las sugerencias */
+  list-style: none; /* Elimina los puntos de la lista */
+  background-color: #1a5276; /* Fondo de las sugerencias */
+  font-family: "Rubik", sans-serif;
+}
+
+.suggestion-item:hover {
+  background-color: #4da6ff; /* Cambia el fondo al pasar el mouse */
+  color: #1a5276; /* Cambia el color del texto al pasar el mouse */
 }
 
 .search-container button {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    background-color: #2980b9;
-    color: white;
-    font-size: 1em;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.3s ease, color 0.3s ease;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  background-color: #2980b9;
+  color: white;
+  font-size: 1em;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease, color 0.3s ease;
 }
 
 .search-container button:hover {
-    background-color: #4DA6FF;
-    color: #1a5276;
-    transform: scale(1.05);
+  background-color: #4da6ff;
+  color: #1a5276;
+  transform: scale(1.05);
 }
 
 .search-container input:focus {
-  outline: 2px solid #FFD700;
+  outline: 2px solid #ffd700;
   outline-offset: 2px;
 }
 
 .search-container button:focus {
-  outline: 2px solid #FFD700;
+  outline: 2px solid #ffd700;
   outline-offset: 2px;
 }
-
-
 
 /* Search Container */
 
 /* Weather Container */
 .weather-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-top: 20px;
-    width: 100%;
-    gap: 20px;
-    border-radius: 5px;
-  background: rgba(255, 255, 255, 0.2); /* Fondo blanco semi-transparente */
-  backdrop-filter: blur(10px);          /* Desenfoque del fondo detrás */
-  -webkit-backdrop-filter: blur(10px);  /* Soporte para Safari */
-  border: 1px solid rgba(255, 255, 255, 0.3); /* Borde sutil */
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);  /* Sombra suave */
-  color: white;                         /* Texto blanco para contraste */
-    padding: 1rem;
-    border-radius: 5px;
-    box-shadow: 0px 5px 15px #00000077;
-    min-width: 300px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
+  width: 50%;
+  gap: 20px;
+  z-index: -1;
+  background: rgba(76, 70, 146, 0.25);
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  border: 1px solid rgba(76, 70, 146, 0.52);
+  color: rgb(0, 0, 0); /* Texto blanco para contraste */
+  padding: 1rem;
+  border-radius: 5px;
+  box-shadow: 0px 5px 15px #00000077;
+  min-width: 300px;
 }
 
 .weather-container h2 {
-    font-size: 2em;
-    color: #FFFFFF;
-    font-family: 'Rubik', sans-serif;
+  font-size: 2em;
+  color: #110f2cb6;
+  font-family: "Rubik", sans-serif;
 }
 
 .temperature {
-    font-size: 3em;
-    color: #FFFFFF;
-    font-family: 'Rubik', sans-serif;
+  font-size: 3em;
+  color: #ffffff;
+  font-family: "Rubik", sans-serif;
 }
 .weather-container p {
-    font-size: 1.2em;
-    color: #FFFFFF;
-    font-family: 'Rubik', sans-serif;
+  font-size: 1.2em;
+  color: #ffffff;
+  font-family: "Rubik", sans-serif;
 }
 
 .weather-container i {
-    font-size: 3em;
-    color: #FFD700;
+  font-size: 3em;
+  color: #ffd700;
 }
 
 .weather-container div {
-    display: flex;
-    align-items: center;
-    gap: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
-
 
 /* Responsive Design */
 @media (max-width: 720px) {
+  .search-container {
+    flex-direction: column;
+    width: 100%;
+  }
+  .search-container input {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+  .search-container button {
+    width: 100%;
+  }
 
-    .search-container {
-        flex-direction: column;
-        width: 100%;
-    }
-    .search-container input {
-        width: 100%;
-        margin-bottom: 10px;
-    }
-    .search-container button {
-        width: 100%;
-    }
-
-    .weather-container {
-        width: 100%;
-        margin: 0;
-    }
-
+  .weather-container {
+    width: 100%;
+    margin: 0;
+  }
 }
