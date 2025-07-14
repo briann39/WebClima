@@ -16,8 +16,10 @@ const inputLocation = document.getElementById("inputLocation");
 const buttonSearch = document.getElementById("btnSearch");
 const locationDisplay = document.getElementById("location");
 
-// Crear contenedor para sugerencias de ciudades
+// Contenedor para las sugerencias de ciudades
 const suggestionsContainer = document.getElementById("city-suggestions");
+
+geoLocation(); // Llama a la función para obtener la ubicación del usuario al cargar la página
 
 // Evento para autocompletar ciudades
 let debounceTimeout;
@@ -134,50 +136,86 @@ function searchWeather() {
     const location = inputLocation.value.trim(); // Elimina espacios en blanco al inicio y al final
     const url = `https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=${apiKey}&units=metric&lang=es`; // Construye la URL de la API con la ubicación ingresada y la clave de API
 
+    actualitationData(url); // Llama a la función para actualizar los datos del clima
+    inputLocation.value = ""; // Limpia el campo de entrada después de la búsqueda
     console.log("URL de la API:", url);
-
-    // Realiza la solicitud a la API de OpenWeatherMap
-    fetch(url)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Error en la respuesta de la API");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        // Procesa la respuesta JSON de la API
-        console.log("Datos del clima:", data);
-
-        // Actualizar los elementos del DOM con los datos obtenidos
-        locationDisplay.textContent = `${data.name}, ${data.sys.country}`; // Mostrar la ubicación
-        temperatureDisplay.textContent = Math.round(data.main.temp) + " °C"; // Mostrar la temperatura
-        temperatureRec.textContent = `Max: ${Math.round(
-          data.main.temp_max
-        )} °C, Min: ${Math.round(data.main.temp_min)} °C`; // Mostrar temperatura máxima y mínima
-        pronosticDisplay.textContent = `Pronostico: ${
-          descriptionMap[data.weather[0].main]
-        }`; // Mostrar el pronóstico del clima según el tipo de clima
-        humidityDisplay.textContent = `Humedad: ${data.main.humidity}%`; // Mostrar la humedad
-        windDisplay.textContent = `Viento: ${data.wind.speed} m/s`; // Mostrar la velocidad del viento
-        console.log(backgroundMap[data.weather[0].main]);
-
-        // Cambiar el video de fondo según el clima
-        sourceBackground.src =
-          backgroundMap[data.weather[0].main] || "backgrounds/default.mp4"; // Cambiar el video de fondo según el clima
-        videoBackground.load(); // Cargar el nuevo video de fondo
-
-        // Actualizar el icono del clima y su color
-        iconDisplay.className =
-          iconMap[data.weather[0].main] || "fas fa-question-circle";
-        iconDisplay.style.color =
-          data.weather[0].main === "Clear" ? "yellow" : "gray";
-
-        console.log(`Temperatura en ${location}: ${data.main.temp}°C`);
-        console.log(`Clima: ${data.weather[0].main}`);
-      })
-      .catch((error) => {
-        console.error("Error al obtener el clima:", error);
-      });
   }
-  console.log("Video de fondo actualizado:", videoBackground.src);
+}
+
+// Función para buscar el clima por coordenadas
+// Esta función toma la latitud y longitud como parámetros y realiza una solicitud a la API de OpenWeatherMap
+// Luego, actualiza los datos del clima en la página
+function searchWeatherByCoords(lat, lon) {
+  const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric&lang=es`; // Construye la URL de la API con latitud y longitud
+  console.log("URL de la API con coordenadas:", url);
+  actualitationData(url); // Llama a la función para actualizar los datos del clima
+}
+
+// Función para obtener la ubicación del usuario
+// Esta función utiliza la API de Geolocalización del navegador para obtener la ubicación actual del usuario
+// Si la ubicación es exitosa, llama a la función searchWeatherByCoords con las coorden
+function geoLocation() {
+  navigator.geolocation.getCurrentPosition(
+    (posicion) => {
+      const lat = posicion.coords.latitude;
+      const lon = posicion.coords.longitude;
+      // Llamar a OpenWeather con lat y lon
+      searchWeatherByCoords(lat, lon);
+      console.log("Latitud:", lat, "Longitud:", lon);
+    },
+    (error) => {
+      console.error("No se pudo obtener la ubicación:", error);
+      alert("No se pudo detectar tu ubicación.");
+    }
+  );
+}
+
+// Función para actualizar los datos del clima
+// Esta función toma una URL como parámetro para realizar la solicitud a la API
+function actualitationData(url) {
+  // Realiza la solicitud a la API de OpenWeatherMap
+  fetch(url)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Error en la respuesta de la API");
+      }
+      return response.json();
+    })
+    .then((data) => {
+      // Procesa la respuesta JSON de la API
+      console.log("Datos del clima:", data);
+
+      // Actualizar los elementos del DOM con los datos obtenidos
+      locationDisplay.textContent = `${data.name}, ${data.sys.country}`; // Mostrar la ubicación
+
+      temperatureDisplay.textContent = Math.round(data.main.temp) + " °C"; // Mostrar la temperatura
+
+      temperatureRec.textContent = `Max: ${Math.round(
+        data.main.temp_max
+      )} °C, Min: ${Math.round(data.main.temp_min)} °C`; // Mostrar temperatura máxima y mínima
+      pronosticDisplay.textContent = `Pronostico: ${
+        descriptionMap[data.weather[0].main]
+      }`; // Mostrar el pronóstico del clima según el tipo de clima
+
+      humidityDisplay.textContent = `Humedad: ${data.main.humidity}%`; // Mostrar la humedad
+      windDisplay.textContent = `Viento: ${data.dt} m/s`; // Mostrar la velocidad del viento
+      console.log(backgroundMap[data.weather[0].main]);
+
+      // Cambiar el video de fondo según el clima
+      sourceBackground.src =
+        backgroundMap[data.weather[0].main] || "backgrounds/default.mp4"; // Cambiar el video de fondo según el clima
+      videoBackground.load(); // Cargar el nuevo video de fondo
+
+      // Actualizar el icono del clima y su color
+      iconDisplay.className =
+        iconMap[data.weather[0].main] || "fas fa-question-circle";
+      iconDisplay.style.color =
+        data.weather[0].main === "Clear" ? "yellow" : "gray";
+
+      console.log(`Temperatura en ${location}: ${data.main.temp}°C`);
+      console.log(`Clima: ${data.weather[0].main}`);
+    })
+    .catch((error) => {
+      console.error("Error al obtener el clima:", error);
+    });
 }
