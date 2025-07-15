@@ -16,10 +16,16 @@ const inputLocation = document.getElementById("inputLocation");
 const buttonSearch = document.getElementById("btnSearch");
 const locationDisplay = document.getElementById("location");
 
+// Elementos para errores
+const errorContainer = document.getElementById("error-container");
+const errorMessage = document.getElementById("error-message");
+
 // Contenedor para las sugerencias de ciudades
 const suggestionsContainer = document.getElementById("city-suggestions");
 
-geoLocation(); // Llama a la función para obtener la ubicación del usuario al cargar la página
+window.onload = () => {
+  geoLocation();
+}; // Llama a la función para obtener la ubicación del usuario al cargar la página
 
 // Evento para autocompletar ciudades
 let debounceTimeout;
@@ -29,6 +35,12 @@ inputLocation.addEventListener("input", function () {
     const query = inputLocation.value.trim();
 
     const geoUrl = `https://wft-geo-db.p.rapidapi.com/v1/geo/cities?namePrefix=${query}&limit=5&sort=-population`;
+
+    if (query.length < 3) {
+      suggestionsContainer.innerHTML = ""; // Limpia las sugerencias si la consulta es menor a 3 caracteres
+      return; // Sale de la función si la consulta es menor a 3 caracteres
+    }
+
     try {
       const response = await fetch(geoUrl, {
         method: "GET",
@@ -51,6 +63,11 @@ inputLocation.addEventListener("input", function () {
           });
           suggestionsContainer.appendChild(item);
         });
+      } else {
+        const item = document.createElement("li");
+        item.textContent = `No se encontraron resultados`;
+        item.className = "suggestion-item"; // Añade una clase para estilos
+        suggestionsContainer.appendChild(item);
       }
     } catch (err) {
       suggestionsContainer.innerHTML = "";
@@ -84,6 +101,8 @@ const iconMap = {
   Tornado: "fas fa-poo-storm",
 };
 
+// Mapeo de descripciones y fondos de video para los diferentes tipos de clima
+// Estos mapeos se utilizan para mostrar descripciones y cambiar el fondo de video según el
 const descriptionMap = {
   Clear: "Despejado",
   Clouds: "Nuboso",
@@ -101,7 +120,6 @@ const descriptionMap = {
   Squall: "Chubasco",
   Tornado: "Tornado",
 };
-
 const backgroundMap = {
   Clear: "backgrounds/clear.mp4",
   Clouds: "backgrounds/clouds.mp4",
@@ -124,11 +142,12 @@ const backgroundMap = {
 buttonSearch.addEventListener("click", searchWeather);
 
 // Función para buscar el clima
-function searchWeather() {
+function searchWeather(event) {
+  event.preventDefault(); // Evita el comportamiento por defecto del formulario
   if (inputLocation.value === "") {
     // Verifica si el campo de entrada está vacío
-
-    alert("Porfavor digita una ciudad");
+    errorContainer.style.display = "flex"; // Muestra el contenedor de errores
+    errorMessage.textContent = "Por favor, ingresa una ciudad"; // Muestra un mensaje de error
   } else {
     // Si el campo no está vacío, procede a buscar el clima
     event.preventDefault(); // Evita el comportamiento por defecto del formulario
@@ -139,6 +158,7 @@ function searchWeather() {
     actualitationData(url); // Llama a la función para actualizar los datos del clima
     inputLocation.value = ""; // Limpia el campo de entrada después de la búsqueda
     console.log("URL de la API:", url);
+    errorContainer.style.display = "none"; // Oculta el contenedor de errores si la búsqueda es exitosa
   }
 }
 
@@ -165,7 +185,9 @@ function geoLocation() {
     },
     (error) => {
       console.error("No se pudo obtener la ubicación:", error);
-      alert("No se pudo detectar tu ubicación.");
+      errorContainer.style.display = "flex"; // Muestra el contenedor de errores
+      errorMessage.textContent =
+        " No se pudo detectar tu ubicación. Por favor, ingresa una ciudad manualmente."; // Muestra un mensaje de error
     }
   );
 }
@@ -177,8 +199,16 @@ function actualitationData(url) {
   fetch(url)
     .then((response) => {
       if (!response.ok) {
-        throw new Error("Error en la respuesta de la API");
+        errorContainer.style.display = "flex"; // Muestra el contenedor de errores
+        if (response.status === 401) {
+          errorMessage.textContent =
+            " Hubo un error al conectar con la API, contacta con un administrador de la web"; // Muestra un mensaje de error específico
+        } else {
+          errorMessage.textContent =
+            " No se pudo obtener el clima. Por favor, verifica la ciudad ingresada."; // Muestra un mensaje de error
+        }
       }
+
       return response.json();
     })
     .then((data) => {
@@ -214,6 +244,10 @@ function actualitationData(url) {
 
       console.log(`Temperatura en ${location}: ${data.main.temp}°C`);
       console.log(`Clima: ${data.weather[0].main}`);
+
+      const timestamp = data.dt * 1000; // multiplicamos por 1000 para ms
+      const fecha = new Date(timestamp);
+      console.log(fecha.toLocaleString());
     })
     .catch((error) => {
       console.error("Error al obtener el clima:", error);
