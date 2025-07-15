@@ -29,49 +29,54 @@ window.onload = () => {
 
 // Evento para autocompletar ciudades
 let debounceTimeout;
+
+async function fetchCities(query) {
+  // URL de la API para buscar ciudades
+  // Esta URL utiliza la API de GeoDB para buscar ciudades por prefijo de nombre
+  const geoUrl = `https://wft-geo-db.p.rapidapi.com/v1/geo/cities?namePrefix=${query}&limit=5&sort=-population`;
+
+  if (query.length < 3) {
+    suggestionsContainer.innerHTML = ""; // Limpia las sugerencias si la consulta es menor a 3 caracteres
+    return; // Sale de la función si la consulta es menor a 3 caracteres
+  }
+
+  try {
+    const response = await fetch(geoUrl, {
+      method: "GET",
+      headers: {
+        "X-RapidAPI-Key": "cc00a81164msh772ce7e8190e3b3p195de5jsncbf13c1b3ea0", // Reemplaza con tu propia clave de RapidAPI
+        "X-RapidAPI-Host": "wft-geo-db.p.rapidapi.com",
+      },
+    });
+    const result = await response.json();
+    suggestionsContainer.innerHTML = "";
+    if (result.data && result.data.length > 0) {
+      result.data.forEach((city) => {
+        const item = document.createElement("li");
+        item.textContent = `${city.city}, ${city.country}`;
+        item.className = "suggestion-item"; // Añade una clase para estilos
+        item.addEventListener("mousedown", function (e) {
+          inputLocation.value = `${city.city}, ${city.country}`;
+          suggestionsContainer.innerHTML = "";
+        });
+        suggestionsContainer.appendChild(item);
+      });
+    } else {
+      const item = document.createElement("li");
+      item.textContent = `No se encontraron resultados`;
+      item.className = "suggestion-item"; // Añade una clase para estilos
+      suggestionsContainer.appendChild(item);
+    }
+  } catch (err) {
+    suggestionsContainer.innerHTML = "";
+  }
+}
+
 inputLocation.addEventListener("input", function () {
   clearTimeout(debounceTimeout);
-  debounceTimeout = setTimeout(async () => {
+  debounceTimeout = setTimeout(() => {
     const query = inputLocation.value.trim();
-
-    const geoUrl = `https://wft-geo-db.p.rapidapi.com/v1/geo/cities?namePrefix=${query}&limit=5&sort=-population`;
-
-    if (query.length < 3) {
-      suggestionsContainer.innerHTML = ""; // Limpia las sugerencias si la consulta es menor a 3 caracteres
-      return; // Sale de la función si la consulta es menor a 3 caracteres
-    }
-
-    try {
-      const response = await fetch(geoUrl, {
-        method: "GET",
-        headers: {
-          "X-RapidAPI-Key":
-            "cc00a81164msh772ce7e8190e3b3p195de5jsncbf13c1b3ea0", // Reemplaza con tu propia clave de RapidAPI
-          "X-RapidAPI-Host": "wft-geo-db.p.rapidapi.com",
-        },
-      });
-      const result = await response.json();
-      suggestionsContainer.innerHTML = "";
-      if (result.data && result.data.length > 0) {
-        result.data.forEach((city) => {
-          const item = document.createElement("li");
-          item.textContent = `${city.city}, ${city.country}`;
-          item.className = "suggestion-item"; // Añade una clase para estilos
-          item.addEventListener("mousedown", function (e) {
-            inputLocation.value = `${city.city}, ${city.country}`;
-            suggestionsContainer.innerHTML = "";
-          });
-          suggestionsContainer.appendChild(item);
-        });
-      } else {
-        const item = document.createElement("li");
-        item.textContent = `No se encontraron resultados`;
-        item.className = "suggestion-item"; // Añade una clase para estilos
-        suggestionsContainer.appendChild(item);
-      }
-    } catch (err) {
-      suggestionsContainer.innerHTML = "";
-    }
+    fetchCities(query); // Llama a la función para buscar ciudades
   }, 350); // Espera 500ms después de dejar de escribir
 });
 
@@ -194,62 +199,61 @@ function geoLocation() {
 
 // Función para actualizar los datos del clima
 // Esta función toma una URL como parámetro para realizar la solicitud a la API
-function actualitationData(url) {
+async function actualitationData(url) {
   // Realiza la solicitud a la API de OpenWeatherMap
-  fetch(url)
-    .then((response) => {
-      if (!response.ok) {
-        errorContainer.style.display = "flex"; // Muestra el contenedor de errores
-        if (response.status === 401) {
-          errorMessage.textContent =
-            " Hubo un error al conectar con la API, contacta con un administrador de la web"; // Muestra un mensaje de error específico
-        } else {
-          errorMessage.textContent =
-            " No se pudo obtener el clima. Por favor, verifica la ciudad ingresada."; // Muestra un mensaje de error
-        }
+  try {
+    const response = await fetch(url);
+    if (!response.ok) {
+      errorContainer.style.display = "flex"; // Muestra el contenedor de errores
+      if (response.status === 401) {
+        errorMessage.textContent =
+          " Hubo un error al conectar con la API, contacta con un administrador de la web"; // Muestra un mensaje de error específico
+      } else {
+        errorMessage.textContent =
+          " No se pudo obtener el clima. Por favor, verifica la ciudad ingresada."; // Muestra un mensaje de error
       }
+      return; // Sale de la función si la respuesta no es exitosa
+    }
 
-      return response.json();
-    })
-    .then((data) => {
-      // Procesa la respuesta JSON de la API
-      console.log("Datos del clima:", data);
+    const data = await response.json(); // Procesa la respuesta JSON de la API
 
-      // Actualizar los elementos del DOM con los datos obtenidos
-      locationDisplay.textContent = `${data.name}, ${data.sys.country}`; // Mostrar la ubicación
+    // Procesa la respuesta JSON de la API
+    console.log("Datos del clima:", data);
 
-      temperatureDisplay.textContent = Math.round(data.main.temp) + " °C"; // Mostrar la temperatura
+    // Actualizar los elementos del DOM con los datos obtenidos
+    locationDisplay.textContent = `${data.name}, ${data.sys.country}`; // Mostrar la ubicación
 
-      temperatureRec.textContent = `Max: ${Math.round(
-        data.main.temp_max
-      )} °C, Min: ${Math.round(data.main.temp_min)} °C`; // Mostrar temperatura máxima y mínima
-      pronosticDisplay.textContent = `Pronostico: ${
-        descriptionMap[data.weather[0].main]
-      }`; // Mostrar el pronóstico del clima según el tipo de clima
+    temperatureDisplay.textContent = Math.round(data.main.temp) + " °C"; // Mostrar la temperatura
 
-      humidityDisplay.textContent = `Humedad: ${data.main.humidity}%`; // Mostrar la humedad
-      windDisplay.textContent = `Viento: ${data.dt} m/s`; // Mostrar la velocidad del viento
-      console.log(backgroundMap[data.weather[0].main]);
+    temperatureRec.textContent = `Max: ${Math.round(
+      data.main.temp_max
+    )} °C, Min: ${Math.round(data.main.temp_min)} °C`; // Mostrar temperatura máxima y mínima
+    pronosticDisplay.textContent = `Pronostico: ${
+      descriptionMap[data.weather[0].main]
+    }`; // Mostrar el pronóstico del clima según el tipo de clima
 
-      // Cambiar el video de fondo según el clima
-      sourceBackground.src =
-        backgroundMap[data.weather[0].main] || "backgrounds/default.mp4"; // Cambiar el video de fondo según el clima
-      videoBackground.load(); // Cargar el nuevo video de fondo
+    humidityDisplay.textContent = `Humedad: ${data.main.humidity}%`; // Mostrar la humedad
+    windDisplay.textContent = `Viento: ${data.dt} m/s`; // Mostrar la velocidad del viento
+    console.log(backgroundMap[data.weather[0].main]);
 
-      // Actualizar el icono del clima y su color
-      iconDisplay.className =
-        iconMap[data.weather[0].main] || "fas fa-question-circle";
-      iconDisplay.style.color =
-        data.weather[0].main === "Clear" ? "yellow" : "gray";
+    // Cambiar el video de fondo según el clima
+    sourceBackground.src =
+      backgroundMap[data.weather[0].main] || "backgrounds/default.mp4"; // Cambiar el video de fondo según el clima
+    videoBackground.load(); // Cargar el nuevo video de fondo
 
-      console.log(`Temperatura en ${location}: ${data.main.temp}°C`);
-      console.log(`Clima: ${data.weather[0].main}`);
+    // Actualizar el icono del clima y su color
+    iconDisplay.className =
+      iconMap[data.weather[0].main] || "fas fa-question-circle";
+    iconDisplay.style.color =
+      data.weather[0].main === "Clear" ? "yellow" : "gray";
 
-      const timestamp = data.dt * 1000; // multiplicamos por 1000 para ms
-      const fecha = new Date(timestamp);
-      console.log(fecha.toLocaleString());
-    })
-    .catch((error) => {
-      console.error("Error al obtener el clima:", error);
-    });
+    console.log(`Temperatura en ${location}: ${data.main.temp}°C`);
+    console.log(`Clima: ${data.weather[0].main}`);
+
+    const timestamp = data.dt * 1000; // multiplicamos por 1000 para ms
+    const fecha = new Date(timestamp);
+    console.log(fecha.toLocaleString());
+  } catch (error) {
+    console.error("Error al obtener el clima:", error);
+  }
 }
