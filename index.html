@@ -15,52 +15,56 @@
   </head>
   <body>
     <section>
+      <!-- Contenedor de fondo de video 
       <div class="video-background">
-        <video id="video-background" autoplay muted loop playsinline>
-          <source
-            id="source-background"
-            src="backgrounds/default.mp4"
-            type="video/mp4"
-          />
-          Tu navegador no soporta el video.
-        </video>
+
+      </div> -->
+
+      <!-- Contenedor de error -->
+      <div id="error-container" class="error-container">
+        <h3>Error:</h3>
+        <p id="error-message"></p>
       </div>
-      <div class="app">
-        <div>
-          <h1 class="title-web">CLIMA</h1>
-        </div>
-        <div id="error-container" class="error-container">
-          <h3>Error :</h3>
-          <p id="error-message"></p>
-        </div>
-        <div class="container">
-          <form onsubmit="" class="search-container">
-            <!-- Formulario de búsqueda de ciudad -->
-            <i class="fa-solid fa-magnifying-glass"></i>
-            <h2>Buscar ciudad</h2>
-            <div class="input-container">
-              <input
-                type="text"
-                name=""
-                id="inputLocation"
-                placeholder="Digita tu ciudad"
-              />
-              <div id="city-suggestions"></div>
+      <div class="container">
+        <div class="weather-container">
+          <h2 id="location">-------</h2>
+          <p id="pronostic">Pronostico: -----</p>
+          <div class="weather-info">
+            <div class="temperature-container">
+              <div>
+                <h3 id="temperature" class="temperature">-- °C</h3>
+                <p>°C</p>
+              </div>
+              <p id="temperatureRec">Min: - °C Max: - °C</p>
             </div>
-            <button type="submit" id="btnSearch">Buscar</button>
-          </form>
-          <div class="weather-container">
-            <h2 id="location">-------</h2>
-            <h3 id="temperature" class="temperature">-- °C</h3>
-            <p id="temperatureRec">Min: - °C Max: - °C</p>
-            <p id="pronostic">Pronostico: -----</p>
-            <i id="weather-icon" class="fas fa-sun"></i>
-            <div>
-              <p id="humidity">Humedad: --%</p>
-              <p id="wind">Viento: -- km/h</p>
+            <div class="icon-container">
+              <img
+                id="weatherIcon"
+                src="backgrounds/weather.svg"
+                alt="Weather Icon"
+              />
             </div>
           </div>
+          <div>
+            <p id="humidity">Humedad: --%</p>
+            <p id="wind">Viento: -- km/h</p>
+          </div>
         </div>
+        <form onsubmit="" class="search-container">
+          <!-- Formulario de búsqueda de ciudad -->
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <h2>Buscar ciudad</h2>
+          <div class="input-container">
+            <input
+              type="text"
+              name=""
+              id="inputLocation"
+              placeholder="Digita tu ciudad"
+            />
+            <div id="city-suggestions"></div>
+          </div>
+          <button type="submit" id="btnSearch">Buscar</button>
+        </form>
       </div>
     </section>
 
