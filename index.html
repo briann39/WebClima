@@ -12,48 +12,51 @@
     />
     <!-- Importar Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
   </head>
   <body>
-    <section>
+    <section class="container">
       <!-- Contenedor de fondo de video 
       <div class="video-background">
 
       </div> -->
 
       <!-- Contenedor de error -->
+
       <div id="error-container" class="error-container">
         <h3>Error:</h3>
         <p id="error-message"></p>
       </div>
-      <div class="container">
-        <div class="weather-container">
-          <h2 id="location">-------</h2>
-          <p id="pronostic">Pronostico: -----</p>
-          <div class="weather-info">
-            <div class="temperature-container">
-              <div>
-                <h3 id="temperature" class="temperature">-- °C</h3>
-                <p>°C</p>
-              </div>
-              <p id="temperatureRec">Min: - °C Max: - °C</p>
+      <div class="weather-container">
+        <h2 id="location">-------</h2>
+        <p id="pronostic">Pronostico: -----</p>
+        <div class="weather-info">
+          <div class="temperature-container">
+            <div>
+              <h3 id="temperature" class="temperature">-- °C</h3>
             </div>
-            <div class="icon-container">
-              <img
-                id="weatherIcon"
-                src="backgrounds/weather.svg"
-                alt="Weather Icon"
-              />
-            </div>
+            <p id="temperatureRec">Min: - °C Max: - °C</p>
           </div>
-          <div>
-            <p id="humidity">Humedad: --%</p>
-            <p id="wind">Viento: -- km/h</p>
+          <div class="icon-container">
+            <img
+              id="weatherIcon"
+              src="backgrounds/weather.svg"
+              alt="Weather Icon"
+            />
           </div>
         </div>
-        <form onsubmit="" class="search-container">
+        <div>
+          <p id="humidity">Humedad: --%</p>
+          <p id="wind">Viento: -- km/h</p>
+        </div>
+      </div>
+      <div class="right-container">
+        <h1>ClimaWeb</h1>
+        <form id="get-form" onsubmit="" class="search-container">
           <!-- Formulario de búsqueda de ciudad -->
-          <i class="fa-solid fa-magnifying-glass"></i>
-          <h2>Buscar ciudad</h2>
           <div class="input-container">
             <input
               type="text"

@@ -7,6 +7,7 @@ const pronosticDisplay = document.getElementById("pronostic");
 const humidityDisplay = document.getElementById("humidity");
 const windDisplay = document.getElementById("wind");
 const iconDisplay = document.getElementById("weather-icon");
+const getForm = document.getElementById("get-form"); // Selección del formulario de búsqueda
 
 const videoBackground = document.getElementById("video-background"); // Selección del video de fondo
 const sourceIcon = document.getElementById("weatherIcon"); // Selección del video de fondo
@@ -32,7 +33,7 @@ const descriptionMap = {
   Clear: "Despejado",
   Clouds: "Nuboso",
   Rain: "Lluvia",
-  Drizzle: "LLovizna",
+  Drizzle: "Llovizna",
   Thunderstorm: "Tormenta",
   Snow: "Nieve",
   Mist: "Neblina",
@@ -82,7 +83,7 @@ inputLocation.addEventListener("blur", function () {
   }, 100);
 });
 // Evento para el botón de búsqueda
-buttonSearch.addEventListener("click", searchWeather);
+getForm.addEventListener("submit", searchWeather); // Llama a la función searchWeather al enviar el formulario
 
 // Función para buscar ciudades
 // Esta función toma una consulta de búsqueda y realiza una solicitud a la API de GeoDB para buscar ciudades
@@ -131,7 +132,7 @@ async function fetchCities(query) {
 
 // Función para actualizar los datos del clima
 // Esta función toma una URL como parámetro para realizar la solicitud a la API
-async function actualitationData(url) {
+async function updateData(url) {
   // Realiza la solicitud a la API de OpenWeatherMap
   try {
     const response = await fetch(url);
@@ -166,7 +167,7 @@ async function actualitationData(url) {
 function searchWeatherByCoords(lat, lon) {
   const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric&lang=es`; // Construye la URL de la API con latitud y longitud
   console.log("URL de la API con coordenadas:", url);
-  actualitationData(url); // Llama a la función para actualizar los datos del clima
+  updateData(url); // Llama a la función para actualizar los datos del clima
 }
 
 // Función para obtener la ubicación del usuario
@@ -192,18 +193,18 @@ function geoLocation() {
 
 // Función para buscar el clima
 function searchWeather(event) {
+  console.log("Evento de búsqueda activado"); // Log para verificar que la función se está llamando
   event.preventDefault(); // Evita el comportamiento por defecto del formulario
   if (inputLocation.value === "") {
     // Verifica si el campo de entrada está vacío
     showError("Por favor, ingresa una ciudad."); // Muestra un mensaje de error si el campo está vacío
   } else {
     // Si el campo no está vacío, procede a buscar el clima
-    event.preventDefault(); // Evita el comportamiento por defecto del formulario
 
     const location = inputLocation.value.trim(); // Elimina espacios en blanco al inicio y al final
     const url = `https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=${apiKey}&units=metric&lang=es`; // Construye la URL de la API con la ubicación ingresada y la clave de API
 
-    actualitationData(url); // Llama a la función para actualizar los datos del clima
+    updateData(url); // Llama a la función para actualizar los datos del clima
     inputLocation.value = ""; // Limpia el campo de entrada después de la búsqueda
     console.log("URL de la API:", url);
     errorContainer.style.display = "none"; // Oculta el contenedor de errores si la búsqueda es exitosa
@@ -214,7 +215,7 @@ function updateWeatherDisplay(data) {
   // Actualizar los elementos del DOM con los datos obtenidos
   locationDisplay.textContent = `${data.name}, ${data.sys.country}`; // Mostrar la ubicación
 
-  temperatureDisplay.textContent = Math.round(data.main.temp) + ""; // Mostrar la temperatura
+  temperatureDisplay.textContent = Math.round(data.main.temp) + "°"; // Mostrar la temperatura
 
   temperatureRec.textContent = `Max: ${Math.round(
     data.main.temp_max
@@ -235,6 +236,7 @@ function updateBackgroundVideo(weatherType) {
 }
 
 function showError(message) {
+  console.error("Error:", message); // Log para verificar el mensaje de error
   // Mostrar un mensaje de error en el contenedor de errores
   errorContainer.style.display = "flex"; // Muestra el contenedor de errores
   errorMessage.textContent = message; // Actualiza el mensaje de error
